@@ -24,6 +24,8 @@ class WheelScreen extends StatefulWidget {
 
 class _WheelScreenState extends State<WheelScreen>
     with SingleTickerProviderStateMixin {
+  static final math.Random _manualRandom = math.Random();
+
   late final AnimationController _spinController;
   late final SensorSpinService _sensorService;
   Animation<double>? _spinAnimation;
@@ -84,27 +86,10 @@ class _WheelScreenState extends State<WheelScreen>
       ..duration = plan.duration
       ..reset();
 
-    // The last 8% of the timeline eases back from a tiny overshoot so the wheel
-    // settles with a soft mechanical buffer instead of a hard stop.
-    final TweenSequence<double> spinSequence =
-        TweenSequence<double>(<TweenSequenceItem<double>>[
-          TweenSequenceItem<double>(
-            tween: Tween<double>(
-              begin: _currentAngle,
-              end: plan.overshootAngle,
-            ).chain(CurveTween(curve: Curves.easeOutCubic)),
-            weight: 92,
-          ),
-          TweenSequenceItem<double>(
-            tween: Tween<double>(
-              begin: plan.overshootAngle,
-              end: plan.targetAngle,
-            ).chain(CurveTween(curve: Curves.easeOutBack)),
-            weight: 8,
-          ),
-        ]);
-
-    _spinAnimation = spinSequence.animate(_spinController);
+    _spinAnimation = Tween<double>(begin: _currentAngle, end: plan.targetAngle)
+        .animate(
+          CurvedAnimation(parent: _spinController, curve: Curves.easeOutQuart),
+        );
 
     setState(() {
       _showResult = false;
@@ -168,6 +153,24 @@ class _WheelScreenState extends State<WheelScreen>
       _statusText =
           '\u70b9\u51fb\u6309\u94ae\uff0c\u6216\u518d\u6b21\u7529\u52a8\u624b\u673a\u89e6\u53d1\u8f6c\u76d8';
     });
+  }
+
+  SpinInput _buildManualSpinInput() {
+    final double seed = _manualRandom.nextDouble();
+    final double intensity;
+
+    if (seed < 0.35) {
+      intensity = 0.22 + (_manualRandom.nextDouble() * 0.18);
+    } else if (seed < 0.7) {
+      intensity = 0.48 + (_manualRandom.nextDouble() * 0.2);
+    } else {
+      intensity = 0.78 + (_manualRandom.nextDouble() * 0.2);
+    }
+
+    return SpinInput(
+      intensity: intensity.clamp(0.0, 1.0),
+      sourceLabel: '\u624b\u52a8\u89e6\u53d1',
+    );
   }
 
   @override
@@ -264,12 +267,7 @@ class _WheelScreenState extends State<WheelScreen>
                             _spinController.isAnimating ||
                                 _awaitingResultAcknowledge
                             ? null
-                            : () => _startSpin(
-                                SpinInput(
-                                  intensity: 0.72,
-                                  sourceLabel: '\u624b\u52a8\u89e6\u53d1',
-                                ),
-                              ),
+                            : () => _startSpin(_buildManualSpinInput()),
                       ),
                       const SizedBox(height: 14),
                       Text(

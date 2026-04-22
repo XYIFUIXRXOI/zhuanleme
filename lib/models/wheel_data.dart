@@ -11,4 +11,16 @@ class WheelData {
   final String title;
   final List<WheelOption> options;
   final WheelType type;
+
+  WheelData copyWith({
+    String? title,
+    List<WheelOption>? options,
+    WheelType? type,
+  }) {
+    return WheelData(
+      title: title ?? this.title,
+      options: options ?? this.options,
+      type: type ?? this.type,
+    );
+  }
 }

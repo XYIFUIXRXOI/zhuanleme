@@ -12,7 +12,6 @@ class SpinInput {
 class SpinPlan {
   const SpinPlan({
     required this.targetAngle,
-    required this.overshootAngle,
     required this.direction,
     required this.selectedIndex,
     required this.initialVelocity,
@@ -23,7 +22,6 @@ class SpinPlan {
   });
 
   final double targetAngle;
-  final double overshootAngle;
   final int direction;
   final int selectedIndex;
   final double initialVelocity;
@@ -68,9 +66,6 @@ class WheelMath {
 
     final double totalRotation = (turns * _twoPi * direction) + correction;
     final double targetAngle = currentAngle + totalRotation;
-    final double overshootAngle =
-        targetAngle +
-        (direction * sectorAngle * (0.07 + (normalizedIntensity * 0.12)));
     final int durationDeltaMs =
         (maxDuration.inMilliseconds - minDuration.inMilliseconds);
     final int durationMs =
@@ -83,7 +78,6 @@ class WheelMath {
 
     return SpinPlan(
       targetAngle: targetAngle,
-      overshootAngle: overshootAngle,
       direction: direction,
       selectedIndex: selectedIndex,
       initialVelocity: initialVelocity,
@@ -108,7 +102,7 @@ class WheelMath {
   }
 
   static double _centerAngleForIndex(int index, double sectorAngle) {
-    return _positiveModulo(_twoPi - ((index + 0.5) * sectorAngle), _twoPi);
+    return _positiveModulo(_twoPi - (index * sectorAngle), _twoPi);
   }
 
   static double _durationFactor(double intensity) {

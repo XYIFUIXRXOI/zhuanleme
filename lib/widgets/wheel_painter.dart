@@ -31,7 +31,7 @@ class WheelPainter extends CustomPainter {
       ..color = AppColors.white38;
 
     for (int i = 0; i < data.options.length; i++) {
-      final double startAngle = (-math.pi / 2) + (i * sweep);
+      final double startAngle = (-math.pi / 2) - (sweep / 2) + (i * sweep);
       final Path slice = Path()
         ..moveTo(center.dx, center.dy)
         ..arcTo(rect, startAngle, sweep, false)
