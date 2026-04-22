@@ -1,6 +1,6 @@
-{
-    "name": "zhuanyixia",
-    "short_name": "zhuanyixia",
+﻿{
+    "name": "转了么",
+    "short_name": "转了么",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
@@ -33,3 +33,4 @@
         }
     ]
 }
+

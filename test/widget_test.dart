@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
 
-import 'package:zhuanyixia/app.dart';
+import 'package:zhuleme/app.dart';
 
 void main() {
   testWidgets('home screen renders wheel entries', (WidgetTester tester) async {
@@ -12,3 +12,4 @@ void main() {
     expect(find.text('\u65f6\u95f4\u8f6c\u76d8'), findsOneWidget);
   });
 }
+

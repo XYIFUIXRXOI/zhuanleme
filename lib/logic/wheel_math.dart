@@ -95,9 +95,12 @@ class WheelMath {
     final double sectorAngle = _twoPi / itemCount;
     final double normalized = _normalizeAngle(angle);
     // The pointer is fixed at the top, so we invert the wheel angle first and
-    // then map the aligned angle into an item index.
+    // then shift by half a sector because the top points to the center of a
+    // slice, not to a divider line.
     final double pointerAligned = _positiveModulo(_twoPi - normalized, _twoPi);
-    final int index = (pointerAligned / sectorAngle).floor() % itemCount;
+    final int index =
+        ((pointerAligned + (sectorAngle / 2)) / sectorAngle).floor() %
+        itemCount;
     return index;
   }
 
