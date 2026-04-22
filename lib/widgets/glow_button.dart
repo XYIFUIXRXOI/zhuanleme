@@ -23,8 +23,8 @@ class GlowButton extends StatelessWidget {
             boxShadow: const <BoxShadow>[
               BoxShadow(
                 color: AppColors.buttonGlow,
-                blurRadius: 28,
-                spreadRadius: 1,
+                blurRadius: 16,
+                spreadRadius: 0,
               ),
             ],
           ),
@@ -35,7 +35,10 @@ class GlowButton extends StatelessWidget {
           ),
         )
         .animate()
-        .shimmer(duration: 2400.ms, color: AppColors.white38)
-        .scaleXY(begin: 1, end: 1.02, duration: 1600.ms);
+        .shimmer(
+          duration: 2400.ms,
+          color: AppColors.white38.withValues(alpha: 0.18),
+        )
+        .scaleXY(begin: 1, end: 1.012, duration: 1600.ms);
   }
 }

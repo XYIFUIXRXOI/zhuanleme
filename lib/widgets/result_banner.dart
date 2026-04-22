@@ -38,8 +38,8 @@ class ResultBanner extends StatelessWidget {
                     boxShadow: const <BoxShadow>[
                       BoxShadow(
                         color: AppColors.edgeGlow,
-                        blurRadius: 26,
-                        spreadRadius: 1,
+                        blurRadius: 14,
+                        spreadRadius: 0,
                       ),
                     ],
                   ),

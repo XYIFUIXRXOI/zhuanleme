@@ -29,8 +29,8 @@ class WheelBoard extends StatelessWidget {
                 boxShadow: const <BoxShadow>[
                   BoxShadow(
                     color: AppColors.edgeGlow,
-                    blurRadius: 52,
-                    spreadRadius: 8,
+                    blurRadius: 30,
+                    spreadRadius: 2,
                   ),
                 ],
               ),

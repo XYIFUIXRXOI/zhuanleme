@@ -10,7 +10,7 @@ class AppConstants {
   static const Duration shakeCooldown = Duration(milliseconds: 1500);
   static const Duration shakeFeedbackThrottle = Duration(milliseconds: 220);
   static const int minTurns = 3;
-  static const int maxTurns = 6;
-  static const Duration minSpinDuration = Duration(milliseconds: 2800);
-  static const Duration maxSpinDuration = Duration(milliseconds: 4200);
+  static const int maxTurns = 10;
+  static const Duration minSpinDuration = Duration(milliseconds: 1600);
+  static const Duration maxSpinDuration = Duration(milliseconds: 6200);
 }

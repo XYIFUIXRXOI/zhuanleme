@@ -52,11 +52,11 @@ class SensorSpinService {
 
       _lastTrigger = now;
       _lastFeedbackMessage = null;
-      final double normalized = ((magnitude - AppConstants.shakeThreshold) / 8)
+      final double normalized = ((magnitude - AppConstants.shakeThreshold) / 14)
           .clamp(0.0, 1.0);
       onTrigger(
         SpinInput(
-          intensity: 0.6 + (normalized * 0.4),
+          intensity: 0.22 + (normalized * 0.78),
           sourceLabel: '\u4f20\u611f\u5668\u89e6\u53d1',
         ),
       );

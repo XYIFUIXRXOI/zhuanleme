@@ -32,6 +32,7 @@ class _WheelScreenState extends State<WheelScreen>
   String _statusText =
       '\u70b9\u51fb\u6309\u94ae\uff0c\u6216\u7529\u52a8\u624b\u673a\u89e6\u53d1\u8f6c\u76d8';
   bool _showResult = false;
+  bool _awaitingResultAcknowledge = false;
   double _sensorIntensity = 0;
 
   @override
@@ -41,12 +42,15 @@ class _WheelScreenState extends State<WheelScreen>
     _sensorService = SensorSpinService()
       ..start(
         onTrigger: (SpinInput input) {
-          if (!_spinController.isAnimating) {
+          if (!_spinController.isAnimating && !_awaitingResultAcknowledge) {
             _startSpin(input);
           }
         },
         onFeedback: (SensorFeedback feedback) {
-          if (!mounted || _spinController.isAnimating || _showResult) {
+          if (!mounted ||
+              _spinController.isAnimating ||
+              _showResult ||
+              _awaitingResultAcknowledge) {
             return;
           }
 
@@ -104,9 +108,10 @@ class _WheelScreenState extends State<WheelScreen>
 
     setState(() {
       _showResult = false;
+      _awaitingResultAcknowledge = false;
       _sensorIntensity = 1;
       _statusText =
-          '${input.sourceLabel} | ${(plan.initialVelocity / math.pi).toStringAsFixed(1)} pi rad/s';
+          '${input.sourceLabel} | ${(plan.perceivedVelocity / math.pi).toStringAsFixed(1)} pi rad/s | ${(plan.duration.inMilliseconds / 1000).toStringAsFixed(1)} s';
     });
 
     await _spinController.forward();
@@ -125,12 +130,14 @@ class _WheelScreenState extends State<WheelScreen>
       _currentAngle = settledAngle;
       _selectedTitle = widget.data.options[resolvedIndex].title;
       _showResult = true;
+      _awaitingResultAcknowledge = true;
       _sensorIntensity = 0;
       _statusText = '\u7ed3\u679c\u5df2\u9501\u5b9a';
     });
 
     await showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: AppColors.surface,
@@ -151,6 +158,16 @@ class _WheelScreenState extends State<WheelScreen>
         );
       },
     );
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _awaitingResultAcknowledge = false;
+      _statusText =
+          '\u70b9\u51fb\u6309\u94ae\uff0c\u6216\u518d\u6b21\u7529\u52a8\u624b\u673a\u89e6\u53d1\u8f6c\u76d8';
+    });
   }
 
   @override
@@ -239,9 +256,13 @@ class _WheelScreenState extends State<WheelScreen>
                       GlowButton(
                         label: _spinController.isAnimating
                             ? '\u65cb\u8f6c\u4e2d...'
+                            : _awaitingResultAcknowledge
+                            ? '\u8bf7\u5148\u786e\u8ba4\u7ed3\u679c'
                             : '\u5f00\u59cb\u65cb\u8f6c',
                         icon: Icons.auto_awesome_rounded,
-                        onPressed: _spinController.isAnimating
+                        onPressed:
+                            _spinController.isAnimating ||
+                                _awaitingResultAcknowledge
                             ? null
                             : () => _startSpin(
                                 SpinInput(

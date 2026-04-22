@@ -15,8 +15,8 @@ class WheelPointer extends StatelessWidget {
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: AppColors.pointerGlow,
-            blurRadius: 18,
-            spreadRadius: 3,
+            blurRadius: 10,
+            spreadRadius: 1,
           ),
         ],
       ),

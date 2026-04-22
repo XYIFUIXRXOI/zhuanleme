@@ -10,9 +10,9 @@ class AppColors {
   static const Color white = Colors.white;
   static const Color white70 = Color(0xB3FFFFFF);
   static const Color white38 = Color(0x61FFFFFF);
-  static const Color pointerGlow = Color(0x66FFD200);
-  static const Color edgeGlow = Color(0x667B61FF);
-  static const Color buttonGlow = Color(0x664FACFE);
+  static const Color pointerGlow = Color(0x33FFD200);
+  static const Color edgeGlow = Color(0x2E7B61FF);
+  static const Color buttonGlow = Color(0x304FACFE);
 
   static const List<List<Color>> wheelGradients = <List<Color>>[
     <Color>[Color(0xFF7B61FF), Color(0xFFFF6FD8)],

@@ -16,6 +16,7 @@ class SpinPlan {
     required this.direction,
     required this.selectedIndex,
     required this.initialVelocity,
+    required this.perceivedVelocity,
     required this.totalRotation,
     required this.duration,
     required this.sourceLabel,
@@ -26,6 +27,7 @@ class SpinPlan {
   final int direction;
   final int selectedIndex;
   final double initialVelocity;
+  final double perceivedVelocity;
   final double totalRotation;
   final Duration duration;
   final String sourceLabel;
@@ -49,12 +51,8 @@ class WheelMath {
     final int selectedIndex = _weightedIndex(data);
     final int direction = _random.nextBool() ? 1 : -1;
     final double normalizedIntensity = input.intensity.clamp(0.0, 1.0);
-    final int turns =
-        minTurns +
-        ((maxTurns - minTurns) * normalizedIntensity).round().clamp(
-          0,
-          maxTurns,
-        );
+    final double turnIntensity = math.pow(normalizedIntensity, 1.18).toDouble();
+    final double turns = minTurns + ((maxTurns - minTurns) * turnIntensity);
     final double sectorAngle = _twoPi / data.options.length;
     final double targetSliceCenter = _centerAngleForIndex(
       selectedIndex,
@@ -71,14 +69,17 @@ class WheelMath {
     final double totalRotation = (turns * _twoPi * direction) + correction;
     final double targetAngle = currentAngle + totalRotation;
     final double overshootAngle =
-        targetAngle + (direction * sectorAngle * 0.08);
+        targetAngle +
+        (direction * sectorAngle * (0.07 + (normalizedIntensity * 0.12)));
     final int durationDeltaMs =
         (maxDuration.inMilliseconds - minDuration.inMilliseconds);
     final int durationMs =
         minDuration.inMilliseconds +
-        (durationDeltaMs * normalizedIntensity).round();
-    final double initialVelocity =
+        (durationDeltaMs * _durationFactor(normalizedIntensity)).round();
+    final double perceivedVelocity =
         totalRotation.abs() / (durationMs / 1000).clamp(0.001, double.infinity);
+    final double initialVelocity =
+        perceivedVelocity * (1.22 + (normalizedIntensity * 0.28));
 
     return SpinPlan(
       targetAngle: targetAngle,
@@ -86,6 +87,7 @@ class WheelMath {
       direction: direction,
       selectedIndex: selectedIndex,
       initialVelocity: initialVelocity,
+      perceivedVelocity: perceivedVelocity,
       totalRotation: totalRotation,
       duration: Duration(milliseconds: durationMs),
       sourceLabel: input.sourceLabel,
@@ -107,6 +109,26 @@ class WheelMath {
 
   static double _centerAngleForIndex(int index, double sectorAngle) {
     return _positiveModulo(_twoPi - ((index + 0.5) * sectorAngle), _twoPi);
+  }
+
+  static double _durationFactor(double intensity) {
+    if (intensity <= 0.2) {
+      return intensity * 0.18;
+    }
+
+    if (intensity <= 0.4) {
+      return 0.05 + ((intensity - 0.2) / 0.2) * 0.12;
+    }
+
+    if (intensity <= 0.6) {
+      return 0.17 + ((intensity - 0.4) / 0.2) * 0.18;
+    }
+
+    if (intensity <= 0.8) {
+      return 0.35 + ((intensity - 0.6) / 0.2) * 0.24;
+    }
+
+    return 0.59 + ((intensity - 0.8) / 0.2) * 0.41;
   }
 
   static int _weightedIndex(WheelData data) {
