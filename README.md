@@ -1,27 +1,27 @@
 # zhuleme
 
-An interactive Flutter roulette app driven by tap and motion input.
+一个基于 Flutter 构建的互动转盘应用。
 
-Users can spin the wheel by pressing a button or shaking the phone. The wheel is rendered with `CustomPainter`, animated with smooth deceleration, and used to produce a final visual result. The app currently includes two built-in wheel types: food selection and time selection. The home screen also provides a configuration drawer for editing wheel content directly inside the app.
+用户可以通过点击按钮或摇动手机触发转盘旋转。转盘基于伪物理逻辑进行旋转与减速，并在最终位置停稳后给出可视化结果。项目当前内置“吃什么”和“时间转盘”两种模式，同时支持在首页左上角菜单中直接配置转盘内容。
 
-## Features
+## 项目特点
 
-- Tap to start a wheel spin
-- Shake to trigger a wheel spin
-- Custom wheel rendering with `CustomPainter`
-- Smooth deceleration animation
-- Editable wheel content from the home screen drawer
-- Add, edit, delete, and reset wheel options
-- Neon-inspired dark UI
+- 支持按钮点击触发转盘旋转
+- 支持摇一摇触发转盘旋转
+- 使用 `CustomPainter` 绘制转盘
+- 使用平滑减速动画实现自然停盘
+- 支持首页配置转盘内容
+- 支持新增、编辑、删除、恢复默认选项
+- 深色霓虹风格界面
 
-## Tech Stack
+## 技术栈
 
 - Flutter
 - Dart
 - `sensors_plus`
 - `flutter_animate`
 
-## Project Structure
+## 目录结构
 
 ```text
 lib/
@@ -35,86 +35,102 @@ lib/
 └── widgets/
 ```
 
-### Main Modules
+### 主要模块说明
 
 - `screens/`
-  Page-level UI such as the home screen and wheel screen
+  页面层，包括首页和转盘页
 - `widgets/`
-  Reusable UI pieces such as the wheel, pointer, result banner, and config drawer
+  可复用组件，例如转盘、指针、结果卡片、配置抽屉
 - `logic/`
-  Spin math, constants, and built-in wheel presets
+  转盘旋转算法、常量、默认数据
 - `services/`
-  Sensor listening and wheel configuration management
+  传感器监听、转盘配置管理
 - `models/`
-  Wheel-related data models
+  转盘相关数据模型
 - `theme/`
-  Shared colors and theme configuration
+  全局配色与主题定义
 
-## Getting Started
+## 功能说明
 
-### 1. Install dependencies
+### 1. 首页
+
+- 展示两个默认入口：
+  - 吃什么
+  - 时间转盘
+- 左上角提供三条杠菜单入口
+- 菜单中可配置转盘内容
+
+### 2. 转盘页
+
+- 支持点击按钮开始旋转
+- 支持摇动手机触发旋转
+- 支持根据最终动画停位计算结果
+- 停盘后展示最终答案
+
+### 3. 配置菜单
+
+- 可分别编辑“吃什么”和“时间转盘”的选项
+- 支持新增选项
+- 支持删除选项
+- 支持恢复默认配置
+
+## 当前实现说明
+
+- 结果以最终动画停位为准
+- 转盘停止时不使用反弹效果
+- 摇一摇灵敏度、旋转时长、旋转速度已做分级处理
+- 安装后的应用显示名为“转了么”
+
+## 快速开始
+
+### 1. 安装依赖
 
 ```bash
 flutter pub get
 ```
 
-### 2. Run the app
+### 2. 运行项目
 
 ```bash
 flutter run
 ```
 
-### 3. Build an Android debug APK
+### 3. 构建 Android 调试包
 
 ```bash
 flutter build apk --debug
 ```
 
-## Usage
+## 开发校验
 
-### Home Screen
-
-- Open the food wheel
-- Open the time wheel
-- Tap the top-left menu icon to open the configuration drawer
-
-### Configuration Drawer
-
-- Edit wheel options for food and time wheels
-- Add new options
-- Delete existing options
-- Restore default content
-
-### Wheel Screen
-
-- Tap `Start Spin` to launch a manual spin
-- Shake the phone to trigger a sensor-based spin
-- Wait for the wheel to decelerate and stop
-- View the final selected result
-
-## Current Behavior
-
-- Final result is based on the actual final animation position
-- The wheel stops with smooth deceleration and no bounce-back
-- Shake sensitivity, spin speed, and spin duration have been tuned for multiple intensity levels
-- The installed app display name is set to `转了么`
-
-## Development Checks
-
-Useful commands during development:
+开发过程中可使用以下命令进行检查：
 
 ```bash
 flutter analyze
 flutter test
 ```
 
-## Possible Future Improvements
+## 使用方式
 
-- Persist wheel configuration locally
-- Add more wheel themes and skins
-- Improve sensor intensity mapping
-- Add result history
+### 首页使用
 
-## License
+- 点击“吃什么”进入餐饮选择转盘
+- 点击“时间转盘”进入时间选择转盘
+- 点击左上角菜单可修改转盘选项内容
 
-This project is intended for learning and product prototyping purposes.
+### 转盘使用
+
+- 点击“开始旋转”可触发一次手动旋转
+- 摇动手机可触发一次传感器旋转
+- 转盘停止后会显示当前命中结果
+
+## 后续可扩展方向
+
+- 本地持久化保存转盘配置
+- 增加更多转盘主题样式
+- 增加结果历史记录
+- 增加更细致的传感器力度反馈
+
+## 说明
+
+如果在部分 Windows 终端中看到 README 中文显示异常，通常是终端编码问题；仓库中的 README 仍然采用 UTF-8 编码，在 GitHub 页面中会正常显示。
