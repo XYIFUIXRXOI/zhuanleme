@@ -18,4 +18,25 @@ class WheelOption {
       weight: weight ?? this.weight,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'title': title,
+      'color': color.map((Color item) => item.toARGB32()).toList(),
+      'weight': weight,
+    };
+  }
+
+  factory WheelOption.fromJson(Map<String, dynamic> json) {
+    final List<dynamic> rawColors =
+        json['color'] as List<dynamic>? ?? <dynamic>[];
+
+    return WheelOption(
+      title: json['title'] as String? ?? '',
+      color: rawColors
+          .map((dynamic item) => Color(item as int))
+          .toList(growable: false),
+      weight: (json['weight'] as num?)?.toDouble() ?? 1,
+    );
+  }
 }

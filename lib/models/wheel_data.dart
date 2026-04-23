@@ -23,4 +23,30 @@ class WheelData {
       type: type ?? this.type,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'title': title,
+      'type': type.storageKey,
+      'options': options
+          .map((WheelOption option) => option.toJson())
+          .toList(growable: false),
+    };
+  }
+
+  factory WheelData.fromJson(Map<String, dynamic> json) {
+    final List<dynamic> rawOptions =
+        json['options'] as List<dynamic>? ?? <dynamic>[];
+
+    return WheelData(
+      title: json['title'] as String? ?? '',
+      type: WheelTypeX.fromStorageKey(json['type'] as String? ?? 'food'),
+      options: rawOptions
+          .map(
+            (dynamic item) =>
+                WheelOption.fromJson(Map<String, dynamic>.from(item as Map)),
+          )
+          .toList(growable: false),
+    );
+  }
 }
